@@ -3,176 +3,252 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shuffle Sistem By Riset HMTI FT Unsika</title>
+<title>Lucky Draw Ultimate</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
 }
 
-body {
-    height: 100vh;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
+/* PERFECT CENTER SYSTEM */
+body{
+    height:100vh;
+    display:grid;
+    place-items:center;
+    background:#050b1a;
+    color:white;
+    overflow:hidden;
 }
 
-.card {
-    backdrop-filter: blur(20px);
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 20px;
-    padding: 50px;
-    width: 450px;
-    text-align: center;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-    transition: 0.4s ease;
+/* Background Grid (does NOT affect layout) */
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(0,119,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,119,255,0.05) 1px, transparent 1px);
+    background-size:40px 40px;
+    animation:gridMove 20s linear infinite;
+    z-index:-1;
 }
 
-.card:hover {
-    transform: translateY(-5px);
+@keyframes gridMove{
+    from{background-position:0 0;}
+    to{background-position:-40px -40px;}
 }
 
-h1 {
-    font-weight: 600;
-    margin-bottom: 30px;
-    letter-spacing: 1px;
+/* CARD */
+.container{
+    width:600px;
+    padding:60px;
+    border-radius:30px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(0,119,255,0.3);
+    box-shadow:0 0 60px rgba(0,119,255,0.3);
+    text-align:center;
 }
 
-.file-upload {
-    margin-bottom: 25px;
+h1{
+    margin-bottom:40px;
+    letter-spacing:3px;
+    color:#cce6ff;
+    font-size:28px;
 }
 
-.upload-btn {
-    display: inline-block;
-    padding: 12px 25px;
-    border-radius: 30px;
-    background: linear-gradient(45deg, #00c6ff, #0072ff);
-    cursor: pointer;
-    transition: 0.3s ease;
-    font-size: 14px;
+.drop-area{
+    border:2px dashed rgba(0,119,255,0.6);
+    border-radius:20px;
+    padding:35px;
+    cursor:pointer;
+    transition:0.3s ease;
+    margin-bottom:30px;
 }
 
-.upload-btn:hover {
-    transform: scale(1.08);
-    box-shadow: 0 10px 25px rgba(0,114,255,0.5);
+.drop-area:hover{
+    background:rgba(0,119,255,0.1);
 }
 
-.file-name {
-    margin-top: 10px;
-    font-size: 14px;
-    opacity: 0.8;
+.file-name{
+    margin-top:12px;
+    font-size:14px;
+    opacity:0.8;
 }
 
-button {
-    padding: 12px 30px;
-    border-radius: 30px;
-    border: none;
-    background: linear-gradient(45deg, #00ffcc, #00c6ff);
-    color: black;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s ease;
-    margin-top: 15px;
+button{
+    padding:15px 50px;
+    border-radius:50px;
+    border:none;
+    background:linear-gradient(45deg,#003566,#0077ff);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s ease;
+    box-shadow:0 0 30px rgba(0,119,255,0.7);
 }
 
-button:hover {
-    transform: scale(1.08);
-    box-shadow: 0 10px 25px rgba(0,255,204,0.5);
+button:hover{
+    transform:scale(1.05);
 }
 
-.rolling {
-    margin-top: 25px;
-    font-size: 18px;
-    opacity: 0.7;
-    height: 30px;
+.slot{
+    margin-top:35px;
+    font-size:18px;
+    opacity:0.6;
 }
 
-.winner-box {
-    margin-top: 30px;
-    padding: 20px;
-    border-radius: 15px;
-    background: rgba(255,255,255,0.15);
-    animation: pop 0.6s ease forwards;
+.winner{
+    margin-top:50px;
+    font-size:38px;
+    font-weight:bold;
+    color:#00c6ff;
+    letter-spacing:4px;
+    filter:blur(15px);
+    transform:scale(0.8);
+    transition:all 0.8s ease;
+    text-shadow:0 0 40px rgba(0,198,255,0.8);
 }
 
-.winner-box h2 {
-    font-size: 26px;
-    color: #00ffcc;
+.winner.reveal{
+    filter:blur(0);
+    transform:scale(1.1);
 }
 
-@keyframes pop {
-    from {transform: scale(0.7); opacity: 0;}
-    to {transform: scale(1); opacity: 1;}
+/* WATERMARK */
+.watermark-left,
+.watermark-right{
+    position:fixed;
+    bottom:20px;
+    width:120px;
+    opacity:0.08;
+    pointer-events:none;
 }
+
+.watermark-left{ left:25px; }
+.watermark-right{ right:25px; }
 </style>
 </head>
 
 <body>
 
-<div class="card">
-    <h1>🎯 Pemilihan Pemenang Survey Kebutuhan</h1>
+<div class="container">
+    <h1>🎯 LUCKY DRAW ULTIMATE</h1>
 
-    <form method="POST" enctype="multipart/form-data">
-
-        <div class="file-upload">
-            <input type="file" id="fileInput" name="file" required hidden>
-            <label for="fileInput" class="upload-btn">
-                📂 Choose Excel File
-            </label>
-            <div class="file-name" id="fileName">No file selected</div>
-        </div>
-
-        <button type="submit">Start Draw</button>
-    </form>
-
-    <div class="rolling" id="rollingText"></div>
-
-    {% if pemenang %}
-    <div class="winner-box">
-        <h3>🏆 Winner</h3>
-        <h2>{{ pemenang }}</h2>
+    <div class="drop-area" id="dropArea">
+        📂 Drag & Drop or Click to Upload Excel
+        <input type="file" id="fileInput" hidden>
+        <div class="file-name" id="fileName">No file selected</div>
     </div>
-    {% endif %}
+
+    <button id="drawBtn">START DRAW</button>
+
+    <div class="slot" id="rollingText"></div>
+    <div class="winner" id="winnerText"></div>
 </div>
 
+<img src="logo_kiri.png" class="watermark-left">
+<img src="logo_kanan.png" class="watermark-right">
+
 <script>
-// Custom file name display
 const fileInput = document.getElementById("fileInput");
 const fileName = document.getElementById("fileName");
+const dropArea = document.getElementById("dropArea");
+const drawBtn = document.getElementById("drawBtn");
+const rollingText = document.getElementById("rollingText");
+const winnerElement = document.getElementById("winnerText");
 
-fileInput.addEventListener("change", function() {
-    if (this.files.length > 0) {
-        fileName.innerText = "Selected: " + this.files[0].name;
-    } else {
-        fileName.innerText = "No file selected";
-    }
+let participants = [];
+
+/* Upload */
+dropArea.addEventListener("click", () => fileInput.click());
+
+fileInput.addEventListener("change", e => {
+    const file = e.target.files[0];
+    if(file) processFile(file);
 });
 
-// Rolling animation
-const rollingText = document.getElementById("rollingText");
+dropArea.addEventListener("dragover", e => {
+    e.preventDefault();
+    dropArea.style.background = "rgba(0,119,255,0.2)";
+});
 
-{% if pemenang %}
-let messages = ["Selecting winner...", "Processing data...", "Almost there...", "Finalizing draw..."];
-let i = 0;
+dropArea.addEventListener("dragleave", () => {
+    dropArea.style.background = "";
+});
 
-let interval = setInterval(() => {
-    rollingText.innerText = messages[i % messages.length];
-    i++;
-}, 150);
+dropArea.addEventListener("drop", e => {
+    e.preventDefault();
+    dropArea.style.background = "";
+    const file = e.dataTransfer.files[0];
+    if(file) processFile(file);
+});
 
-setTimeout(() => {
-    clearInterval(interval);
+function processFile(file){
+    if(!file.name.match(/\.(xlsx|xls)$/)){
+        alert("Upload file Excel (.xlsx atau .xls)");
+        return;
+    }
+
+    fileName.innerText = "Selected: " + file.name;
+
+    const reader = new FileReader();
+    reader.onload = function(event){
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, {type:'array'});
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(sheet, {header:1});
+        participants = json.map(row => row[0]).filter(Boolean);
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+/* Draw */
+drawBtn.addEventListener("click", () => {
+
+    if(participants.length === 0){
+        alert("Upload file terlebih dahulu.");
+        return;
+    }
+
+    winnerElement.classList.remove("reveal");
+    winnerElement.innerText = "";
     rollingText.innerText = "";
-}, 2000);
-{% endif %}
+
+    let messages = ["Initializing...","Scanning entries...","Randomizing..."];
+    let i = 0;
+
+    let interval = setInterval(() => {
+        rollingText.innerText = messages[i % messages.length];
+        i++;
+    }, 120);
+
+    setTimeout(() => {
+
+        clearInterval(interval);
+        rollingText.innerText = "";
+
+        const winnerName = participants[Math.floor(Math.random() * participants.length)];
+        const finalText = "🏆 " + winnerName;
+
+        winnerElement.innerText = finalText;
+        winnerElement.classList.add("reveal");
+
+        confetti({
+            particleCount: 300,
+            spread: 160,
+            origin: { y: 0.6 }
+        });
+
+    }, 2000);
+});
 </script>
 
 </body>
-
 </html>
