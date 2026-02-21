@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky Draw System</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.card {
+    backdrop-filter: blur(20px);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 50px;
+    width: 450px;
+    text-align: center;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    transition: 0.4s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+h1 {
+    font-weight: 600;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+.file-upload {
+    margin-bottom: 25px;
+}
+
+.upload-btn {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 30px;
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-size: 14px;
+}
+
+.upload-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 25px rgba(0,114,255,0.5);
+}
+
+.file-name {
+    margin-top: 10px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+button {
+    padding: 12px 30px;
+    border-radius: 30px;
+    border: none;
+    background: linear-gradient(45deg, #00ffcc, #00c6ff);
+    color: black;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-top: 15px;
+}
+
+button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 25px rgba(0,255,204,0.5);
+}
+
+.rolling {
+    margin-top: 25px;
+    font-size: 18px;
+    opacity: 0.7;
+    height: 30px;
+}
+
+.winner-box {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.15);
+    animation: pop 0.6s ease forwards;
+}
+
+.winner-box h2 {
+    font-size: 26px;
+    color: #00ffcc;
+}
+
+@keyframes pop {
+    from {transform: scale(0.7); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h1>🎯 Pemilihan Pemenang</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <div class="file-upload">
+            <input type="file" id="fileInput" name="file" required hidden>
+            <label for="fileInput" class="upload-btn">
+                📂 Choose Excel File
+            </label>
+            <div class="file-name" id="fileName">No file selected</div>
+        </div>
+
+        <button type="submit">Start Draw</button>
+    </form>
+
+    <div class="rolling" id="rollingText"></div>
+
+    {% if pemenang %}
+    <div class="winner-box">
+        <h3>🏆 Winner</h3>
+        <h2>{{ pemenang }}</h2>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+// Custom file name display
+const fileInput = document.getElementById("fileInput");
+const fileName = document.getElementById("fileName");
+
+fileInput.addEventListener("change", function() {
+    if (this.files.length > 0) {
+        fileName.innerText = "Selected: " + this.files[0].name;
+    } else {
+        fileName.innerText = "No file selected";
+    }
+});
+
+// Rolling animation
+const rollingText = document.getElementById("rollingText");
+
+{% if pemenang %}
+let messages = ["Selecting winner...", "Processing data...", "Almost there...", "Finalizing draw..."];
+let i = 0;
+
+let interval = setInterval(() => {
+    rollingText.innerText = messages[i % messages.length];
+    i++;
+}, 150);
+
+setTimeout(() => {
+    clearInterval(interval);
+    rollingText.innerText = "";
+}, 2000);
+{% endif %}
+</script>
+
+</body>
+</html>
