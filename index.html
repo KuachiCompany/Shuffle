@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky Draw - HMTI FT UNSIKA</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --navy-deep: #08112b;
+    --navy-mid: #0d1854;
+    --navy-bright: #1a2a7a;
+    --gold: #f5c518;
+    --gold-light: #ffd94d;
+    --gold-dark: #c9930a;
+    --cyan: #00c6ff;
+    --white: #ffffff;
+    --glass: rgba(255,255,255,0.07);
+    --glass-border: rgba(255,255,255,0.13);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    min-height: 100vh;
+    background: var(--navy-deep);
+    font-family: 'Barlow', sans-serif;
+    color: var(--white);
+    overflow-x: hidden;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M0 30 Q15 10 30 30 Q45 50 60 30' stroke='%23ffffff07' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* =====================
+   BACKGROUND GLOW
+   ===================== */
+.bg-glow {
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 20% 15%, rgba(26,42,122,0.45) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 85%, rgba(13,24,84,0.5) 0%, transparent 55%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* =====================
+   WAVE TOP
+   ===================== */
+.wave-top {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 110px;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+.wave-top svg { position: absolute; bottom: 0; width: 100%; }
+
+/* =====================
+   HEADER
+   ===================== */
+.header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 40px 0;
+}
+
+.logos {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo-img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+}
+
+.logo-divider {
+    width: 1px;
+    height: 44px;
+    background: rgba(255,255,255,0.2);
+}
+
+.hashtag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--gold);
+    text-align: right;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 20px rgba(245,197,24,0.4);
+}
+
+/* =====================
+   MAIN
+   ===================== */
+.main {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 20px 60px;
+}
+
+/* =====================
+   TITLE SECTION
+   ===================== */
+.title-section {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.lion-logo {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    margin-bottom: 14px;
+    mix-blend-mode: screen;
+    filter: drop-shadow(0 0 30px rgba(0,198,255,0.5));
+    animation: floatLion 3.5s ease-in-out infinite;
+}
+
+@keyframes floatLion {
+    0%, 100% {
+        transform: translateY(0);
+        filter: drop-shadow(0 0 30px rgba(0,198,255,0.5));
+    }
+    50% {
+        transform: translateY(-10px);
+        filter: drop-shadow(0 0 50px rgba(0,198,255,0.8));
+    }
+}
+
+.title-section h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(40px, 7vw, 68px);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+.title-section .subtitle {
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    font-weight: 500;
+}
+
+/* =====================
+   CARD
+   ===================== */
+.card {
+    width: 100%;
+    max-width: 500px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 38px;
+    box-shadow:
+        0 30px 80px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 0 0 1px rgba(245,197,24,0.04);
+    transition: transform 0.4s, box-shadow 0.4s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 40px 100px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+/* =====================
+   UPLOAD ZONE
+   ===================== */
+.upload-zone {
+    border: 2px dashed rgba(245,197,24,0.35);
+    border-radius: 14px;
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 24px;
+    background: rgba(245,197,24,0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-zone:hover {
+    border-color: var(--gold);
+    background: rgba(245,197,24,0.07);
+    transform: scale(1.01);
+}
+
+.upload-icon {
+    font-size: 38px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.upload-zone p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 4px;
+}
+
+.upload-zone .hint {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.file-tag {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 6px 14px;
+    background: rgba(245,197,24,0.15);
+    border: 1px solid rgba(245,197,24,0.3);
+    border-radius: 30px;
+    font-size: 12px;
+    color: var(--gold-light);
+    justify-content: center;
+}
+
+/* =====================
+   COUNT
+   ===================== */
+.count-wrap { margin-bottom: 22px; }
+
+.count-wrap label {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.count-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    justify-content: center;
+}
+
+.cnt-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(245,197,24,0.4);
+    background: rgba(245,197,24,0.1);
+    color: var(--gold);
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cnt-btn:hover {
+    background: rgba(245,197,24,0.25);
+    border-color: var(--gold);
+    transform: scale(1.1);
+}
+
+#countDisplay {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--gold);
+    min-width: 56px;
+    text-align: center;
+}
+
+/* =====================
+   DRAW BUTTON
+   ===================== */
+.draw-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+    color: var(--navy-deep);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 8px 30px rgba(245,197,24,0.35);
+    position: relative;
+    overflow: hidden;
+}
+
+.draw-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.5s, height 0.5s;
+}
+
+.draw-btn:hover::after { width: 500px; height: 500px; }
+.draw-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 50px rgba(245,197,24,0.55); }
+.draw-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+/* =====================
+   ROLLING SECTION
+   ===================== */
+.rolling-section {
+    margin-top: 28px;
+    text-align: center;
+    min-height: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.rolling-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 8px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.rolling-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    min-height: 40px;
+    filter: blur(8px);
+    transition: filter 0.6s ease;
+    user-select: none;
+}
+
+.rolling-name.revealed {
+    filter: blur(0px);
+}
+
+/* =====================
+   WINNERS SECTION
+   ===================== */
+.winners-section {
+    margin-top: 28px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.section-title::before,
+.section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.winner-card {
+    background: linear-gradient(135deg, rgba(245,197,24,0.1), rgba(245,197,24,0.03));
+    border: 1px solid rgba(245,197,24,0.25);
+    border-radius: 14px;
+    padding: 18px 24px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    animation: winReveal 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+}
+
+@keyframes winReveal {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.w-rank {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--gold);
+    min-width: 36px;
+    text-align: center;
+    text-shadow: 0 0 20px rgba(245,197,24,0.5);
+}
+
+.w-info { flex: 1; }
+
+.w-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.w-sub {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(245,197,24,0.6);
+    text-transform: uppercase;
+}
+
+.w-trophy {
+    font-size: 26px;
+    filter: drop-shadow(0 0 10px rgba(245,197,24,0.5));
+}
+
+/* =====================
+   FOOTER
+   ===================== */
+.footer {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 40px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+}
+
+.footer-ornament,
+.footer-right {
+    flex: 1;
+}
+
+.footer-right {
+    text-align: right;
+}
+
+.footer-mid {
+    flex: 0 0 auto;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    text-align: center;
+}
+
+.footer-ornament {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.45;
+}
+
+.footer-ornament svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--gold);
+    filter: drop-shadow(0 0 4px rgba(245,197,24,0.5));
+}
+
+.footer-ornament-line {
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+.footer-ornament-line.right {
+    background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+/* =====================
+   CONFETTI
+   ===================== */
+.confetti-piece {
+    position: fixed;
+    top: -12px;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 2px;
+    animation: cfall linear forwards;
+}
+
+@keyframes cfall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* =====================
+   RESPONSIVE
+   ===================== */
+@media (max-width: 600px) {
+    .header { padding: 14px 18px 0; }
+    .logo-img { height: 44px; }
+    .card { padding: 24px 18px; }
+    .main { padding: 24px 14px 40px; }
+    .footer { padding: 10px 18px; justify-content: center; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- Background Glow -->
+<div class="bg-glow"></div>
+
+<!-- Wave Decoration Top -->
+<div class="wave-top">
+  <svg viewBox="0 0 1440 110" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,75 C240,110 480,0 720,55 C960,110 1200,0 1440,55 L1440,0 L0,0 Z" fill="rgba(26,42,122,0.45)"/>
+    <path d="M0,95 C360,55 720,130 1080,70 C1260,45 1380,85 1440,75 L1440,0 L0,0 Z" fill="rgba(13,24,84,0.35)"/>
+  </svg>
+</div>
+
+<!-- =====================
+     HEADER
+     ===================== -->
+<div class="header">
+  <div class="logos">
+    <!-- Logo UNSIKA -->
+    <img src="images/logo-unsika.png" class="logo-img" alt="UNSIKA">
+    <div class="logo-divider"></div>
+    <!-- Logo HMTI -->
+    <img src="images/logo-hmti.jpg" class="logo-img" alt="HMTI">
+  </div>
+  <div class="hashtag">#LOYALTY<br>FOREVER</div>
+</div>
+
+<!-- =====================
+     MAIN CONTENT
+     ===================== -->
+<div class="main">
+
+  <!-- Title -->
+  <div class="title-section">
+    <!-- Logo Lion -->
+    <img src="images/logo-lion.png" class="lion-logo" alt="Logo">
+    <h1>Lucky Draw</h1>
+    <p class="subtitle">HMTI FT UNSIKA &mdash; Riset Kebutuhan 2026</p>
+  </div>
+
+  <!-- Card Upload & Draw -->
+  <div class="card">
+    <input type="file" id="fileInput" accept=".xlsx,.csv" hidden>
+
+    <!-- Upload Zone -->
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <span class="upload-icon">📊</span>
+      <p>Upload File Data Peserta</p>
+      <p class="hint">Format: .xlsx atau .csv</p>
+      <div class="file-tag" id="fileTag">
+        <span>✅</span><span id="tagName"></span>
+      </div>
+    </div>
+
+    <!-- Winner Count -->
+    <div class="count-wrap">
+      <label>Jumlah Pemenang</label>
+      <div class="count-row">
+        <button class="cnt-btn" onclick="changeCount(-1)">−</button>
+        <span id="countDisplay">1</span>
+        <button class="cnt-btn" onclick="changeCount(1)">+</button>
+      </div>
+    </div>
+
+    <!-- Draw Button -->
+    <button class="draw-btn" id="drawBtn" onclick="startDraw()" disabled>
+      🎯 MULAI UNDIAN
+    </button>
+
+    <!-- Rolling Name Display -->
+    <div class="rolling-section">
+      <div class="rolling-label" id="rollingLabel">Mengacak peserta...</div>
+      <div class="rolling-name" id="rollingName"></div>
+    </div>
+  </div>
+
+  <!-- Winners List -->
+  <div class="winners-section" id="winnersSection" style="display:none">
+    <div class="section-title">🏆 Pemenang Undian</div>
+    <div id="winnersList"></div>
+  </div>
+
+</div>
+
+<!-- =====================
+     FOOTER
+     ===================== -->
+<div class="footer">
+  <div class="footer-ornament">
+    <div class="footer-ornament-line"></div>
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L14.09 8.26L21 9.27L16 14.14L17.18 21.02L12 17.77L6.82 21.02L8 14.14L3 9.27L9.91 8.26L12 2Z"/>
+    </svg>
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:12px;height:12px;opacity:0.6;">
+      <path d="M12 2L14.09 8.26L21 9.27L16 14.14L17.18 21.02L12 17.77L6.82 21.02L8 14.14L3 9.27L9.91 8.26L12 2Z"/>
+    </svg>
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L14.09 8.26L21 9.27L16 14.14L17.18 21.02L12 17.77L6.82 21.02L8 14.14L3 9.27L9.91 8.26L12 2Z"/>
+    </svg>
+    <div class="footer-ornament-line right"></div>
+  </div>
+
+  <span class="footer-mid">DIVISI RISET · HMTI FT UNSIKA</span>
+
+  <span class="footer-right">@Hmti_unsika</span>
+</div>
+
+<!-- XLSX Library (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+// =============================================
+// LUCKY DRAW - HMTI FT UNSIKA
+// =============================================
+
+let participants = [];
+let winnerCount = 1;
+let isDrawing = false;
+
+// =============================================
+// FILE UPLOAD HANDLER
+// =============================================
+
+const fileInput = document.getElementById('fileInput');
+fileInput.addEventListener('change', handleFile);
+
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => {
+    e.preventDefault();
+    zone.style.borderColor = 'var(--gold)';
+});
+zone.addEventListener('dragleave', () => {
+    zone.style.borderColor = '';
+});
+zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.style.borderColor = '';
+    const f = e.dataTransfer.files[0];
+    if (f) {
+        const dt = new DataTransfer();
+        dt.items.add(f);
+        fileInput.files = dt.files;
+        handleFile({ target: { files: [f] } });
+    }
+});
+
+function handleFile(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    document.getElementById('tagName').textContent = file.name;
+    document.getElementById('fileTag').style.display = 'flex';
+
+    const reader = new FileReader();
+
+    if (file.name.toLowerCase().endsWith('.csv')) {
+        reader.onload = ev => {
+            const lines = ev.target.result.split('\n').filter(l => l.trim());
+            participants = lines
+                .slice(1)
+                .map(l => l.split(',')[0].replace(/"/g, '').trim())
+                .filter(Boolean);
+            updateBtn();
+        };
+        reader.readAsText(file);
+    } else {
+        reader.onload = ev => {
+            const wb = XLSX.read(new Uint8Array(ev.target.result), { type: 'array' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+            participants = rows
+                .slice(1)
+                .map(r => r[0])
+                .filter(v => v !== undefined && v !== '')
+                .map(String);
+            updateBtn();
+        };
+        reader.readAsArrayBuffer(file);
+    }
+}
+
+// =============================================
+// UPDATE BUTTON STATE
+// =============================================
+
+function updateBtn() {
+    const btn = document.getElementById('drawBtn');
+    if (participants.length > 0) {
+        btn.disabled = false;
+        btn.textContent = '🎯 MULAI UNDIAN (' + participants.length + ' peserta)';
+    } else {
+        btn.disabled = true;
+        alert('Tidak ada data ditemukan di kolom pertama.');
+    }
+}
+
+// =============================================
+// WINNER COUNT CONTROL
+// =============================================
+
+function changeCount(d) {
+    winnerCount = Math.max(1, Math.min(winnerCount + d, Math.max(participants.length, 10)));
+    document.getElementById('countDisplay').textContent = winnerCount;
+}
+
+// =============================================
+// START DRAW
+// =============================================
+
+async function startDraw() {
+    if (isDrawing || participants.length === 0) return;
+    isDrawing = true;
+
+    document.getElementById('winnersSection').style.display = 'none';
+    document.getElementById('winnersList').innerHTML = '';
+    document.getElementById('rollingLabel').style.opacity = '1';
+    document.getElementById('rollingName').textContent = '';
+
+    const btn = document.getElementById('drawBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ MENGUNDI...';
+
+    const count = Math.min(winnerCount, participants.length);
+    const shuffled = [...participants].sort(() => Math.random() - 0.5);
+    const winners = shuffled.slice(0, count);
+
+    await roll(3200);
+
+    document.getElementById('rollingLabel').style.opacity = '0';
+    document.getElementById('rollingName').textContent = '';
+    document.getElementById('winnersSection').style.display = 'block';
+
+    const trophies = ['🥇','🥈','🥉','🏅','🏅','🏅','🏅','🏅','🏅','🏅'];
+    const list = document.getElementById('winnersList');
+
+    winners.forEach((name, i) => {
+        setTimeout(() => {
+            const div = document.createElement('div');
+            div.className = 'winner-card';
+            div.style.animationDelay = (i * 0.12) + 's';
+            div.innerHTML =
+                '<div class="w-rank">' + (i + 1) + '</div>' +
+                '<div class="w-info">' +
+                    '<div class="w-name">' + name + '</div>' +
+                    '<div class="w-sub">Pemenang ke-' + (i + 1) + '</div>' +
+                '</div>' +
+                '<div class="w-trophy">' + (trophies[i] || '🏅') + '</div>';
+            list.appendChild(div);
+        }, i * 160);
+    });
+
+    setTimeout(confetti, 300);
+    isDrawing = false;
+    btn.disabled = false;
+    btn.textContent = '🔄 UNDIAN LAGI';
+}
+
+// =============================================
+// ROLLING ANIMATION
+// =============================================
+
+function roll(duration) {
+    return new Promise(res => {
+        const start = Date.now();
+        const el = document.getElementById('rollingName');
+        el.classList.remove('revealed');
+        function tick() {
+            const p = (Date.now() - start) / duration;
+            if (p >= 1) {
+                el.textContent = '';
+                el.classList.remove('revealed');
+                res();
+                return;
+            }
+            el.textContent = participants[Math.floor(Math.random() * participants.length)];
+            setTimeout(tick, 50 + p * p * 300);
+        }
+        tick();
+    });
+}
+
+// =============================================
+// CONFETTI EFFECT
+// =============================================
+
+function confetti() {
+    const cols = ['#f5c518','#ffd94d','#00c6ff','#ffffff','#c9930a','#4466dd'];
+    for (let i = 0; i < 90; i++) {
+        setTimeout(() => {
+            const el = document.createElement('div');
+            el.className = 'confetti-piece';
+            el.style.cssText =
+                'left:' + Math.random() * 100 + 'vw;' +
+                'background:' + cols[Math.floor(Math.random() * cols.length)] + ';' +
+                'width:' + (7 + Math.random() * 9) + 'px;' +
+                'height:' + (7 + Math.random() * 9) + 'px;' +
+                'animation-duration:' + (2 + Math.random() * 2) + 's';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 4500);
+        }, i * 25);
+    }
+}
+</script>
+
+</body>
+</html>
