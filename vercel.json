@@ -1,9 +1,0 @@
-{
-  "headers": [
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-      ]
-    }
-  ]
-}
